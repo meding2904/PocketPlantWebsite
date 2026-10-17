@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pocket Plant – Guess the word, grow your plant</title>
+<meta name="description" content="Pocket Plant is a word-guessing puzzle game with 20 plants to grow. Free Android download.">
+<meta property="og:title" content="Pocket Plant">
+<meta property="og:description" content="Guess the word. Grow your plant. 20 plants to unlock.">
+<meta property="og:image" content="assets/icon.png">
+<link rel="icon" href="assets/icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap">
+<style>
+:root{--bg:#fff;--card:#fff;--line:#E5E5E5;--text:#4B4B4B;--muted:#777;--scene:#DDF4FF;--scene-line:#84D8FF;
+--green:#58CC02;--green-e:#58A700;--blue:#1CB0F6;--blue-e:#1899D6;--orange:#FF9600;--yellow:#FFC800;--tint:#D7FFB8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131F24;--card:#131F24;--line:#37464F;--text:#F1F7FB;--muted:#9FB3BE;--scene:#1B3A4B;--scene-line:#2B5A73;--tint:#1F3A12}}
+:root[data-theme="dark"]{--bg:#131F24;--card:#131F24;--line:#37464F;--text:#F1F7FB;--muted:#9FB3BE;--scene:#1B3A4B;--scene-line:#2B5A73;--tint:#1F3A12}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Nunito,system-ui,sans-serif;font-weight:800}
+body{min-height:100vh}
+.page{max-width:960px;margin:0 auto;padding:20px;display:flex;flex-direction:column;gap:56px}
+svg{width:100%;height:auto;display:block;overflow:visible}
+h1,h2,h3,p{margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:12px}
+
+header{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:26px;color:var(--green);text-decoration:none}
+.logo img{width:36px;height:36px;border-radius:10px}
+.chip{font-weight:900;font-size:16px;color:var(--orange)}
+
+.btn{display:inline-block;text-align:center;text-decoration:none;font:inherit;font-weight:900;font-size:15px;letter-spacing:.8px;text-transform:uppercase;border:0;border-radius:16px;padding:16px 26px;cursor:pointer;color:#fff;background:var(--green);box-shadow:0 4px 0 var(--green-e);transition:transform .09s,box-shadow .09s}
+.btn:active{transform:translateY(4px);box-shadow:0 0 0 var(--green-e)}
+.btn.alt{background:var(--card);color:var(--blue);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);padding:14px 24px}
+.btn.alt:active{box-shadow:0 0 0 var(--line)}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center}
+.hero h1{font-weight:900;font-size:clamp(36px,6vw,56px);line-height:1.05}
+.hero h1 em{font-style:normal;color:var(--green)}
+.lead{font-size:20px;color:var(--muted);margin:16px 0 26px;max-width:26em}
+.meta{font-size:14px;color:var(--muted);margin-top:14px}
+.play{display:flex;flex-direction:column;gap:16px;max-width:380px;width:100%;margin:0 auto}
+.bubble{position:relative;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 16px;font-size:16px;text-align:center}
+.bubble::after,.bubble::before{content:"";position:absolute;left:50%;margin-left:-10px;border:10px solid transparent}
+.bubble::before{bottom:-22px;border-top-color:var(--line)}
+.bubble::after{bottom:-19px;border-top-color:var(--card)}
+.scene{background:var(--scene);border:2px solid var(--scene-line);border-radius:24px;padding:8px 8px 0;margin-top:6px}
+.lvl{text-align:center;font-size:14px;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin:2px 0 10px}
+.bar{position:relative;height:16px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--green);border-radius:99px;transition:width .6s cubic-bezier(.34,1.6,.5,1);position:relative}
+.bar i::after{content:"";position:absolute;left:8px;right:8px;top:4px;height:4px;border-radius:4px;background:rgba(255,255,255,.35)}
+.grow{transform-origin:150px 216px;transform-box:view-box;transition:transform .8s cubic-bezier(.34,1.9,.5,1),opacity .3s}
+.sway{transform-origin:150px 216px;transform-box:view-box;animation:sway 4s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-1.8deg)}to{transform:rotate(1.8deg)}}
+.eye{transform-origin:center;transform-box:fill-box;animation:blink 4.2s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+
+h2{font-weight:900;font-size:clamp(26px,4vw,34px);margin-bottom:6px}
+.sub{color:var(--muted);margin-bottom:22px}
+
+/* steps use the game's habit-row look */
+.list{display:grid;gap:12px}
+.item{display:flex;align-items:center;gap:14px;font-size:18px;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:0 4px 0 var(--line)}
+.item.done{border-color:var(--green);background:var(--tint);color:var(--green-e);box-shadow:0 4px 0 var(--green)}
+.item .box{width:32px;height:32px;border-radius:50%;border:3px solid var(--line);display:grid;place-items:center;flex:none;color:#fff;font-size:15px;font-weight:900}
+.item.done .box{background:var(--green);border-color:var(--green-e)}
+.item.num .box{background:var(--blue);border-color:var(--blue-e)}
+.item small{display:block;font-size:15px;color:var(--muted);font-weight:700}
+.item.done small{color:var(--green-e);opacity:.85}
+
+/* plant gallery */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.pcard{background:var(--scene);border:2px solid var(--scene-line);border-radius:20px;padding:8px 8px 10px;text-align:center}
+.pcard span{display:block;font-size:13px;letter-spacing:.8px;text-transform:uppercase;color:var(--blue)}
+.pcard b{display:block;font-size:17px;font-weight:900}
+.more{margin-top:16px;text-align:center;color:var(--muted)}
+
+.cta{background:var(--scene);border:2px solid var(--scene-line);border-radius:24px;padding:36px 22px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.cta h2{margin:0}
+.cta p{color:var(--muted);max-width:28em}
+footer{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;font-size:14px;color:var(--muted);padding-bottom:20px}
+
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr;gap:28px}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .page{gap:44px}
+  .btn{flex:1}
+}
+@media (prefers-reduced-motion:reduce){.sway,.eye{animation:none}.grow,.bar i{transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<!-- shared art -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<g id="lf"><path d="M0 0 Q-30 -30 -52 -4 Q-30 14 0 0Z" fill="#58CC02"/><path d="M0 0 Q-30 14 -52 -4 Q-28 -2 0 0Z" fill="#58A700"/><path d="M-6 -3 Q-24 -14 -40 -5" fill="none" stroke="#9CEB4E" stroke-width="3" stroke-linecap="round"/></g>
+<g id="fl"><g fill="var(--p,#FFC800)"><circle cx="0" cy="-13" r="9"/><circle cx="12" cy="-4" r="9"/><circle cx="7" cy="11" r="9"/><circle cx="-7" cy="11" r="9"/><circle cx="-12" cy="-4" r="9"/></g><circle r="8" fill="var(--c,#FF9600)"/><circle cx="-2" cy="-2" r="3" fill="#fff" opacity=".5"/></g>
+<g id="potBack"><ellipse cx="150" cy="332" rx="86" ry="7" fill="#000" opacity=".12"/><path d="M82 244 L218 244 L204 316 Q202 326 192 326 L108 326 Q98 326 96 316 Z" fill="#FF9600"/><path d="M90 300 L210 300 L204 316 Q202 326 192 326 L108 326 Q98 326 96 316Z" fill="#E58700"/><ellipse cx="150" cy="217" rx="62" ry="9" fill="#8B5A3C"/></g>
+<g id="potFront"><rect x="72" y="224" width="156" height="28" rx="14" fill="#E58700"/><rect x="72" y="218" width="156" height="28" rx="14" fill="#FFAB2E"/>
+<circle cx="125" cy="279" r="11" fill="#fff"/><circle cx="175" cy="279" r="11" fill="#fff"/><circle class="eye" cx="126" cy="281" r="5.5" fill="#3C3C3C"/><circle class="eye" cx="174" cy="281" r="5.5" fill="#3C3C3C"/><circle cx="123" cy="278" r="2" fill="#fff"/><circle cx="171" cy="278" r="2" fill="#fff"/><circle cx="105" cy="296" r="7" fill="#FFC266"/><circle cx="195" cy="296" r="7" fill="#FFC266"/><path d="M138 294 Q150 306 162 294" fill="none" stroke="#7A4300" stroke-width="5" stroke-linecap="round"/></g>
+</defs>
+</svg>
+
+<div class="page">
+<header>
+  <a class="logo" href="#top"><img src="assets/icon.png" alt="" onerror="this.style.display='none'">Pocket Plant</a>
+  <span class="chip">v1.0.4</span>
+</header>
+
+<main style="display:contents">
+<section class="hero" id="top">
+  <div>
+    <h1>Guess the word.<br><em>Grow your plant.</em></h1>
+    <p class="lead">Solve word puzzles by guessing the answer. Every puzzle you solve helps your plant grow, and it evolves into 20 different plants.</p>
+    <div class="row">
+      <a class="btn" href="https://github.com/meding2904/PocketPlant/releases/download/1.0.4/PocketPlant-1.0.4.apk">Download for Android</a>
+      <a class="btn alt" href="https://github.com/meding2904/PocketPlant">See on GitHub</a>
+    </div>
+    <p class="meta">Free · APK file · Version 1.0.4</p>
+  </div>
+
+  <div class="play" aria-label="Preview of the game">
+    <div class="bubble" id="msg" aria-live="off">Solve a puzzle to wake me up.</div>
+    <div class="scene">
+      <svg viewBox="0 0 300 340" role="img" aria-label="A smiling plant pot growing a plant">
+        <use href="#potBack"/>
+        <g class="sway"><g class="grow" id="seedG"><ellipse cx="150" cy="212" rx="24" ry="9" fill="#6E4428"/><ellipse cx="150" cy="203" rx="8" ry="11" fill="#C98B4B" transform="rotate(-18 150 203)"/></g><g class="grow" id="plantG"></g></g>
+        <use href="#potFront"/>
+      </svg>
+      <p class="lvl" id="stageName">Level 1 of 20 · Daisy · Seed</p>
+    </div>
+    <div class="bar" aria-hidden="true"><i id="fill"></i></div>
+  </div>
+</section>
+
+<section>
+  <h2>How it works</h2>
+  <p class="sub">One short loop, every day.</p>
+  <div class="list">
+    <div class="item done"><span class="box">✓</span><span>Guess the word<small>Each puzzle hides a word. Guess it to solve the puzzle.</small></span></div>
+    <div class="item done"><span class="box">✓</span><span>Watch it grow<small>Every solved puzzle grows your plant: seed, sprout, growing, fully grown.</small></span></div>
+    <div class="item done"><span class="box">✓</span><span>Evolve it<small>A fully grown plant evolves into a new, more epic one.</small></span></div>
+  </div>
+</section>
+
+<section>
+  <h2>20 plants to unlock</h2>
+  <p class="sub">From a simple daisy to a cosmic tree. Here are a few.</p>
+  <div class="grid" id="gallery"></div>
+  <p class="more">…and 12 more to find.</p>
+</section>
+
+<section>
+  <h2>Install on Android</h2>
+  <p class="sub">It takes about a minute.</p>
+  <div class="list">
+    <div class="item num"><span class="box">1</span><span>Download the APK<small>Tap “Download for Android” and save the file.</small></span></div>
+    <div class="item num"><span class="box">2</span><span>Open the file<small>If Android asks, allow installs from your browser or file manager.</small></span></div>
+    <div class="item num"><span class="box">3</span><span>Tap Install<small>Open Pocket Plant and solve your first puzzle.</small></span></div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to plant your first seed?</h2>
+  <p>Pocket Plant is free. Download it and solve your first puzzle today.</p>
+  <a class="btn" href="https://github.com/meding2904/PocketPlant/releases/download/1.0.4/PocketPlant-1.0.4.apk">Download for Android</a>
+</section>
+</main>
+
+<footer>
+  <span>© Pocket Plant</span>
+  <a href="https://github.com/meding2904/PocketPlant/releases">All releases</a>
+</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const C=(c,x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`;
+const stem=(y,c="#58A700",w=9)=>`<path d="M150 218 L150 ${y}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+const wood=(d,w,c="#8B5A3C")=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const pair=(y,s)=>`<use href="#lf" transform="translate(150 ${y}) scale(${s})"/><use href="#lf" transform="translate(150 ${y}) scale(${-s} ${s})"/>`;
+const fl=(x,y,s,p,c)=>`<use href="#fl" style="--p:${p};--c:${c}" transform="translate(${x} ${y}) scale(${s})"/>`;
+const star=(x,y,s,c="#fff")=>`<path d="M${x} ${y-s}Q${x} ${y} ${x+s} ${y}Q${x} ${y} ${x} ${y+s}Q${x} ${y} ${x-s} ${y}Q${x} ${y} ${x} ${y-s}Z" fill="${c}"/>`;
+const ring=(n,f)=>Array.from({length:n},(_,i)=>f(i,i/n*Math.PI*2)).join("");
+// same plant art as the game; "lv" is the real level number
+const PL=[
+{lv:1,n:"Daisy",d:()=>stem(110)+pair(200,1)+pair(165,.85)+fl(150,92,1.35,"#FF86D0","#FFC800")},
+{lv:2,n:"Tulip",d:()=>stem(118)+pair(198,1.15)+pair(168,.9)+`<path d="M122 106L122 76L137 90L150 66L163 90L178 76L178 106Q150 126 122 106Z" fill="#FF4B4B"/><path d="M150 66L163 90L178 76L178 106Q165 116 150 120Z" fill="#EA2B2B"/><path d="M137 90L150 66L150 112Q132 106 126 98Z" fill="#FF7A7A" opacity=".6"/>`},
+{lv:3,n:"Sunflower",d:()=>stem(96,"#58A700",12)+pair(200,1.2)+pair(168,1.05)+ring(14,i=>`<ellipse cx="150" cy="52" rx="9" ry="20" fill="${i%2?"#FFB000":"#FFC800"}" transform="rotate(${i*360/14} 150 78)"/>`)+C("#7A4300",150,78,22)+C("#5C3200",150,78,14)+C("#A0622A",144,72,3)+C("#A0622A",157,82,3)},
+{lv:4,n:"Cactus",d:()=>wood("M128 170L106 170Q96 170 96 160L96 138",18,"#58CC02")+wood("M172 150L194 150Q204 150 204 140L204 118",18,"#58CC02")+`<rect x="128" y="108" width="44" height="112" rx="22" fill="#58CC02"/><path d="M150 108Q172 108 172 130L172 218L150 218Z" fill="#58A700"/><path d="M140 126L140 192" stroke="#9CEB4E" stroke-width="4" stroke-linecap="round"/>`+fl(150,104,.95,"#FF86D0","#FFC800")+fl(96,132,.6,"#FFC800","#FF9600")+fl(204,112,.6,"#FFC800","#FF9600")},
+{lv:6,n:"Cherry blossom",d:()=>wood("M150 218L150 150M150 172L122 142M150 160L180 132",12)+C("#FF9ACB",150,92,40)+C("#FF9ACB",112,118,30)+C("#FF9ACB",188,114,30)+C("#FFC2E0",138,80,22)+C("#FFC2E0",172,86,18)+C("#FFC2E0",110,112,14)+C("#FFC2E0",190,108,12)+C("#fff",150,60,5)+C("#fff",92,128,4)+C("#fff",208,124,4)},
+{lv:7,n:"Lotus",d:()=>stem(150,"#58A700",8)+[-58,-30,0,30,58].map(a=>`<ellipse cx="150" cy="118" rx="15" ry="34" fill="#CE82FF" transform="rotate(${a} 150 150)"/>`).join("")+[-42,-14,14,42].map(a=>`<ellipse cx="150" cy="124" rx="14" ry="28" fill="#E3A8FF" transform="rotate(${a} 150 150)"/>`).join("")+C("#FFC800",150,142,9)+star(112,70,7)+star(190,84,6)},
+{lv:9,n:"Golden tree",d:()=>wood("M150 218L150 140M150 170L124 142M150 160L178 136",16,"#B07A45")+C("#FFC800",150,90,46)+C("#FFC800",108,118,32)+C("#FFC800",192,118,32)+C("#FFDE59",138,78,26)+C("#FFDE59",176,92,16)+C("#FF9600",120,100,7)+C("#FF9600",168,66,7)+C("#FF9600",188,126,7)+star(150,40,10,"#FFF3A0")+star(86,90,7,"#FFF3A0")+star(214,92,7,"#FFF3A0")},
+{lv:20,n:"Cosmic tree",d:()=>`<path d="M122 218Q146 192 144 148L156 148Q154 192 178 218Z" fill="#6F4BC9"/><path d="M144 154L128 138M156 154L174 136" stroke="#6F4BC9" stroke-width="9" stroke-linecap="round"/>`+ring(8,(i,a)=>C(["#7B4DFF","#CE82FF","#1CB0F6"][i%3],150+56*Math.cos(a),98+56*Math.sin(a),24))+C("#2B1B6B",150,98,50)+C("#5B3FD9",150,98,34)+C("#fff",150,98,14)+star(150,98,26,"#FFC800")+`<ellipse cx="150" cy="98" rx="104" ry="24" fill="none" stroke="#FFC800" stroke-width="5" transform="rotate(-16 150 98)"/>`+C("#FF9600",246,70,10)+C("#1CB0F6",58,126,8)+star(62,50,9)+star(238,34,8)+star(150,22,9)}
+];
+
+// gallery
+$("gallery").innerHTML=PL.map(p=>`<div class="pcard"><svg viewBox="0 0 300 340" aria-hidden="true"><use href="#potBack"/><g>${p.d()}</g><use href="#potFront"/></svg><span>Level ${p.lv}</span><b>${p.n}</b></div>`).join("");
+
+// hero: grows through the stages, then evolves to the next plant
+const STAGE=["Seed","Sprout","Growing","Fully grown"],SC=[.001,.42,.72,1];
+const MSG=["Solve a puzzle to wake me up.","Just sprouted!","Growing fast.","Fully grown! One more puzzle and I evolve."];
+let li=0,g=0,shown=-1;
+function draw(){
+  const P=PL[li],pg=$("plantG");
+  if(shown!==li){pg.style.transition="none";pg.innerHTML=P.d();pg.style.transform="scale(.01)";void pg.getBoundingClientRect();pg.style.transition="";shown=li}
+  pg.style.transform=`scale(${SC[g]})`;
+  $("seedG").style.transform=g===0?"scale(1)":"scale(.01)";
+  $("stageName").textContent=`Level ${P.lv} of 20 · ${P.n} · ${STAGE[g]}`;
+  $("msg").textContent=MSG[g];
+  $("fill").style.width=(g/3*100)+"%";
+}
+if(reduce){g=3;li=2;draw()}else{
+  draw();
+  setInterval(()=>{g++;if(g>3){g=1;li=(li+1)%PL.length}draw()},1700);
+}
+</script>
+</body>
+</html>

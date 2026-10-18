@@ -36,6 +36,13 @@ header{display:flex;align-items:center;justify-content:space-between}
 .btn.alt{background:var(--card);color:var(--blue);border:2px solid var(--line);box-shadow:0 4px 0 var(--line);padding:14px 24px}
 .btn.alt:active{box-shadow:0 0 0 var(--line)}
 .row{display:flex;gap:12px;flex-wrap:wrap}
+.store{display:inline-flex;align-items:center;gap:12px;background:var(--line);color:var(--muted);border-radius:16px;padding:9px 18px;opacity:.75;cursor:not-allowed;user-select:none;text-align:left}
+.store svg{width:24px;flex:none}
+.store span{display:block;line-height:1.15}
+.store small{display:block;font-size:11px;letter-spacing:.6px;text-transform:uppercase;font-weight:800}
+.store b{display:block;font-size:19px;font-weight:900}
+.store em{font-style:normal;font-size:11px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;background:var(--orange);color:#fff;border-radius:99px;padding:3px 9px;margin-left:4px}
+
 
 /* hero */
 .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center}
@@ -120,6 +127,7 @@ footer{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;fo
       <a class="btn" href="https://github.com/meding2904/PocketPlant/releases/download/1.0.4/PocketPlant-1.0.4.apk">Download for Android</a>
       <a class="btn alt" href="https://github.com/meding2904/PocketPlant">See on GitHub</a>
     </div>
+    <div class="row" style="margin-top:14px"><span class="store" role="img" aria-label="Google Play, coming soon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2.5l16 9.5-16 9.5z" fill="currentColor"/></svg><span><small>Get it on</small><b>Google Play</b></span><em>Coming soon</em></span></div>
     <p class="meta">Free · APK file · Version 1.0.4</p>
   </div>
 
@@ -168,6 +176,7 @@ footer{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;fo
   <h2>Ready to plant your first seed?</h2>
   <p>Pocket Plant is free. Download it and solve your first puzzle today.</p>
   <a class="btn" href="https://github.com/meding2904/PocketPlant/releases/download/1.0.4/PocketPlant-1.0.4.apk">Download for Android</a>
+  <span class="store" role="img" aria-label="Google Play, coming soon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2.5l16 9.5-16 9.5z" fill="currentColor"/></svg><span><small>Get it on</small><b>Google Play</b></span><em>Coming soon</em></span>
 </section>
 </main>
 
